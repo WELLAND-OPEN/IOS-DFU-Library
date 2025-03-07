@@ -32,7 +32,7 @@ import CoreBluetooth
 
 internal class DFUPacket: DFUCharacteristic {
 
-    private let packetSize: UInt32 = 20 // Legacy DFU does not support higher MTUs.
+    private var packetSize: UInt32 = 20 // Legacy DFU does not support higher MTUs.
     
     internal var characteristic: CBCharacteristic
     internal var logger: LoggerHelper
@@ -55,6 +55,12 @@ internal class DFUPacket: DFUCharacteristic {
     required init(_ characteristic: CBCharacteristic, _ logger: LoggerHelper) {
         self.characteristic = characteristic
         self.logger = logger
+        if characteristic.properties.contains(.writeWithoutResponse)  {
+            self.packetSize = UInt32(characteristic.service!.peripheral!.maximumWriteValueLength(for: .withoutResponse))
+        }
+        else {
+            self.packetSize = UInt32(characteristic.service!.peripheral!.maximumWriteValueLength(for: .withResponse))
+        }
     }
     
     // MARK: - Characteristic API methods

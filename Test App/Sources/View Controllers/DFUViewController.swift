@@ -230,9 +230,10 @@ class DFUViewController: UIViewController, CBCentralManagerDelegate, DFUServiceD
         // However, some devices may still work better with them enabled! A specially those
         // based on SDK older than 8.0 where the flash saving was slower and modern phones
         // can send data faster then that which causes the DFU bootloader to abort with an error.
-        if #available(iOS 11.0, macOS 10.13, *) {
-            dfuInitiator.packetReceiptNotificationParameter = 0
-        }
+        // Welland must set dfuInitiator.packetReceiptNotificationParameter
+        // if #available(iOS 11.0, macOS 10.13, *) {
+        //     dfuInitiator.packetReceiptNotificationParameter = 0
+        // }
         
         // Apply step's modifications to the DFU initiator
         firmwareProvider.applyModifier(to: dfuInitiator)
